@@ -41,7 +41,6 @@ class Intercode:
             param2 = param2 if self.opcode.mode2 else self.instructions[param2]
         elif self.opcode.code == 3:
             param3 = self.instructions[self.pos + 1]
-            param1 = param3 if self.opcode.mode1 else self.instructions[param3]
         elif self.opcode.code == 4:
             param1 = self.instructions[self.pos + 1]
             param1 = param1 if self.opcode.mode1 else self.instructions[param1]
