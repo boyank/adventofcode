@@ -8,6 +8,7 @@ class Intercode:
     def __init__(self, instructions=None, pos=0):
         self.instructions = [int(num) for num in instructions.split(',')]
         self.pos = pos
+        self._initial_state = tuple(self.instructions)
 
 
     @property
@@ -28,14 +29,14 @@ class Intercode:
 
     @property
     def offset(self):
-        offsets = {1:4, 2:4, 3:2, 4:2}
+        offsets = {1:4, 2:4, 3:2, 4:2, 5:3, 6:3, 7:4, 8:4}
         return offsets[self.opcode.code]
 
 
     @property
     def instruction(self):
         param1 = param2 = param3 = None
-        if self.opcode.code in (1, 2):
+        if self.opcode.code in (1, 2, 7, 8):
             param1, param2, param3 = self.instructions[self.pos+1:self.pos + self.offset]
             param1 = param1 if self.opcode.mode1 else self.instructions[param1]
             param2 = param2 if self.opcode.mode2 else self.instructions[param2]
@@ -44,14 +45,21 @@ class Intercode:
         elif self.opcode.code == 4:
             param1 = self.instructions[self.pos + 1]
             param1 = param1 if self.opcode.mode1 else self.instructions[param1]
+        elif self.opcode.code in (5, 6):
+            param1, param2 = self.instructions[self.pos+1:self.pos + 3]
+            param1 = param1 if self.opcode.mode1 else self.instructions[param1]
+            param2 = param2 if self.opcode.mode2 else self.instructions[param2]
         return Instruction(self.opcode, param1, param2, param3, self.pos)
 
 
-    def run(self):
-        operations = {1:self._add, 2:self._mul, 3:self._input, 4:self._output}
+    def run(self, reset=True):
+        operations = {1:self._add, 2:self._mul, 3:self._input, 4:self._output,
+                      5:self._jump_true, 6:self._jump_false, 7:self._lt, 8:self._eq}
         while True:
             if self.opcode.code == 99:
-                print('--- END CODE 99 ---')
+                logging.debug('--- END CODE 99 ---')
+                if reset:
+                    self.reset()
                 break
             else:
                 operations[self.opcode.code]()
@@ -91,15 +99,52 @@ class Intercode:
         self.pos += self.offset
 
 
-def part1(fname):
-    with open(fname) as f:
-        data = f.read()
-        intercode = Intercode(data)
-        intercode.run()
+    def _jump_true(self):
+        instruction = self.instruction
+        logging.debug(f'Jump-if-true: {instruction}')
+        if instruction.param1:
+            self.pos = instruction.param2
+        else:
+            self.pos += self.offset
 
+
+    def _jump_false(self):
+        instruction = self.instruction
+        logging.debug(f'Jump-if-false: {instruction}')
+        if not instruction.param1:
+            self.pos = instruction.param2
+        else:
+            self.pos += self.offset
+
+
+    def _lt(self):
+        instruction = self.instruction
+        logging.debug(f'Less than: {instruction}')
+        self.instructions[instruction.target] = int(instruction.param1 < instruction.param2)
+        self.pos += self.offset
+
+
+    def _eq(self):
+        instruction = self.instruction
+        logging.debug(f'Equal: {instruction}')
+        self.instructions[instruction.target] = int(instruction.param1 == instruction.param2)
+        self.pos += self.offset
+
+
+    def reset(self):
+        self.instructions = list(self._initial_state)
+        self.pos = 0
 
 
 if __name__ == '__main__':
+    
     logging.basicConfig(level=logging.INFO)
     fname = './advent2019/day05/input.txt'
-    part1(fname)
+    with open(fname) as f:
+        data = f.read()
+    
+    intercode = Intercode(data)
+    print('Run part 1. Provide input ID=1')
+    intercode.run()
+    print('Run part 2. Provide input ID=5')
+    intercode.run()
