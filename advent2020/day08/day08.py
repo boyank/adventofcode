@@ -13,6 +13,7 @@ class Emulator:
         self.value = value
         self.pos = pos
         self._log = []
+        self.success = None
         
 
     @property
@@ -38,23 +39,42 @@ class Emulator:
 
     def acc(self, value):
         self.value += value
+        self.pos += 1
 
     def jmp(self, value):
         self.pos += value
 
     def nop(self, value):
-        pass
+        self.pos += 1
 
     def run(self):
+        self._log = []
+        self.value = 0
+        self.success = False
+        self.pos = 0
         while True:
-            if self.pos in self.log:
-                return self.value
+            if self.pos in self.log or self.success:
+                break
             instruction = self.instructions[self.pos]
             self.log.append(self.pos)
             cmd = getattr(self, instruction.opcode)
             cmd(instruction.value)
-            if instruction.opcode != 'jmp':
-                self.pos += 1
+            self.success = self.pos > len(self.instructions) - 1
+        return self.value
+
+    def run_diagnostic(self):
+        orig_state = self.instructions[::]
+        test_positions = [idx for idx, instr in enumerate(self.instructions) if instr.opcode != 'acc']
+        for pos in test_positions:
+            instr = self.instructions[pos]
+            new_code = 'jmp' if instr.opcode == 'nop' else 'nop'
+            self.instructions[pos] = Instruction(new_code, instr.value)
+            result = self.run()
+            self.instructions = orig_state[::]
+            if self.success:
+                return self.success, self.value, pos, instr.opcode, new_code
+        return self.success, self.value, None, None, None
+
 
 
 def part1(fname):
@@ -62,6 +82,12 @@ def part1(fname):
         instructions = f.read()
         emulator = Emulator(instructions=instructions)
         return emulator.run()
+
+def part2(fname):
+    with open(fname) as f:
+        instructions = f.read()
+        emulator = Emulator(instructions=instructions)
+        return emulator.run_diagnostic()
 
 
 @pytest.fixture()
@@ -88,7 +114,17 @@ def test_emulator_run(input_data):
     emulator.run()
     assert emulator.value == result
 
+
+@pytest.mark.usefixtures('input_data')
+def test_emulator_diagnostic(input_data):
+    instr, expected, result = input_data
+    emulator = Emulator(instr)
+    assert emulator.run_diagnostic()  == (True, 8, 7, 'jmp', 'nop')
+
+
 if __name__ == '__main__':
     fname = './advent2020/day08/input.txt'
     result = part1(fname)
+    print(f'Accumulator value: {result}') # Accumulator value: 1451
+    success, result, *_ = part2(fname)
     print(f'Accumulator value: {result}') # Accumulator value: 1451
