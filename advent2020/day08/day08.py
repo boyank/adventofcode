@@ -122,9 +122,17 @@ def test_emulator_diagnostic(input_data):
     assert emulator.run_diagnostic()  == (True, 8, 7, 'jmp', 'nop')
 
 
+def test_aoc():
+    fname = './advent2020/day08/input.txt'
+    result = part1(fname)
+    assert result == 1451
+    success, result, *_ = part2(fname)
+    assert result == 1160
+
+
 if __name__ == '__main__':
     fname = './advent2020/day08/input.txt'
     result = part1(fname)
     print(f'Accumulator value: {result}') # Accumulator value: 1451
     success, result, *_ = part2(fname)
-    print(f'Accumulator value: {result}') # Accumulator value: 1451
+    print(f'Accumulator value: {result}') # Accumulator value: 1160
