@@ -8,10 +8,10 @@ Instruction = namedtuple('Instruction', ['opcode', 'value'])
 
 
 class Emulator:
-    def __init__(self, instructions, value=0, pos=0):
+    def __init__(self, instructions, seed=0, pos=0):
         self.instructions = instructions
-        self.value = value
-        self.pos = pos
+        self.value = self.seed = seed
+        self.start = self.pos = pos
         self._log = []
         self.success = None
         
@@ -49,9 +49,9 @@ class Emulator:
 
     def run(self):
         self._log = []
-        self.value = 0
+        self.value = self.seed
         self.success = False
-        self.pos = 0
+        self.pos = self.start
         while True:
             if self.pos in self.log or self.success:
                 break
