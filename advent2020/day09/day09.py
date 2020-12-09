@@ -31,14 +31,13 @@ def part2(data, number):
 
 @pytest.fixture()
 def input_data():
-    with open('./advent2020/day09/test_input.txt') as f:
-        return [int(num) for num in f.read().splitlines()]
+    fname = './advent2020/day09/test_input.txt'
+    return get_data(fname)
 
 
 @pytest.mark.usefixtures('input_data')
 def test_part1(input_data):
     assert part1(input_data, 5) == 127
-
 
 
 @pytest.mark.usefixtures('input_data')
@@ -64,8 +63,7 @@ def test_aoc():
 
 if __name__ == '__main__':
     fname = './advent2020/day09/input.txt'
-    with open(fname) as f:
-        data = [int(num) for num in f.read().splitlines()]
+    data = get_data(fname)
     result = part1(data, 25)
     print(f'First number that does not have this property: {result}') # 400480901
     result = part2(data, result)
