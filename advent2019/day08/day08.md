@@ -61,10 +61,3 @@ So, the final image looks like this:
 __What message is produced after decoding your image?__
 
 Your puzzle answer was EHRUE.
-
-    ▓ ▓▓ ▓   ▓▓ ▓▓ ▓    ▓
- ▓▓▓▓ ▓▓ ▓ ▓▓ ▓ ▓▓ ▓ ▓▓▓▓
-   ▓▓    ▓ ▓▓ ▓ ▓▓ ▓   ▓▓
- ▓▓▓▓ ▓▓ ▓   ▓▓ ▓▓ ▓ ▓▓▓▓
- ▓▓▓▓ ▓▓ ▓ ▓ ▓▓ ▓▓ ▓ ▓▓▓▓
-    ▓ ▓▓ ▓ ▓▓ ▓▓  ▓▓    ▓
