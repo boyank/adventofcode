@@ -1,4 +1,4 @@
-'''https://adventofcode.com/2019/day/8#part2'''
+'''https://adventofcode.com/2019/day/8'''
 
 def get_data(fname):
     with open(fname) as f:
