@@ -1,7 +1,9 @@
+'''https://adventofcode.com/2020/day/10'''
+
 import pytest
 from pathlib import Path
 from collections import Counter
-from itertools import product
+
 
 FNAME = Path(__file__).with_name('input.txt')
 
