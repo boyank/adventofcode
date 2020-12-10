@@ -21,27 +21,25 @@ def check_adapters(data):
 
 
 def possible_connections(data):
-    '''brute force
-
-    '''
     data.append(0)
-    data.sort()
-    adapters = {}
-    data.append(data[-1] + 3)
-    for adapter in data[:-1]:
-        adapters[adapter] = [adapter + dif for dif in range(1, 4) if (adapter + dif) in data]
-    possible_chains = set()
-    for chain in product(*adapters.values()):
-        chain = set(chain)
-        if all(0 < key < 4 for key in check_adapters(chain)):
-            possible_chains.update({tuple(sorted(chain))})
-    return len(possible_chains)
+    data.sort(reverse=True)
+    all_connections = [1]
+    for idx, adapter in enumerate(data[1:], start=1):
+        connections = 0
+        for offset in (1, 2, 3):
+            prev_idx = idx - offset
+            if prev_idx >= 0:
+                if 1 <= data[prev_idx] - adapter <= 3:
+                    connections += all_connections[prev_idx]
+        all_connections.append(connections)
+    return all_connections[-1]
     
     
 def part1():
     data = get_data(FNAME)
     cntr = check_adapters(data)
     return cntr[1] * cntr[3]
+
 
 def part2():
     data = get_data(FNAME)
