@@ -24,7 +24,7 @@ def do_round(plan, crowd=3, level=1):
         for colid, seat in enumerate(row):
             logging.debug(f'[{rowid}, {colid}]: {seat}')
             if seat != '.':
-                occupied_seats = num_occupied(plan, rowid, colid)
+                occupied_seats = check_occupied(plan, rowid, colid, level=level)
                 if seat == 'L' and not occupied_seats:
                     next_plan[-1].append('#')
                 elif seat == '#' and occupied_seats > crowd:
@@ -78,7 +78,57 @@ def num_occupied(plan, row, col):
     return Counter(seats)['#']
 
 
+def check_row(plan, row, col, numrows, numcols, level):
+    seats = []
+    offsets =  {'LC':(-1, 0), 
+                'RC':(1, numcols)}
+    for co, limit in offsets.values():
+        for idx, colid in enumerate(range(col + co, limit, co), start=1):
+            seat = plan[row][colid]
+            seats.append(seat)
+            if seat != '.' or idx == level:
+                break
+    return seats
 
+
+def check_col(plan, row, col, numrows, numcols, level):
+    seats = []
+    offsets =  {'TC':(-1, 0), 
+                'DC':(1, numrows)}
+    for ro, limit in offsets.values():
+        for idx, rowid in enumerate(range(row + ro, limit, ro), start=1):
+            seat = plan[rowid][col]
+            seats.append(seat)
+            if seat != '.' or idx == level:
+                break
+    return seats
+
+
+def check_diagonals(plan, row, col, numrows, numcols, level):
+    seats = []
+    offsets = {'TL':(-1, -1, 0, 0), 
+               'TR':(-1, 1, 0, numcols), 
+               'DL':(1, -1, numrows, 0), 
+               'DR':(1, 1, numrows, numcols)}
+    for ro, co, rlimit, climit in offsets.values():
+        for ridx, rowid in enumerate(range(row + ro, rlimit, ro), start=1):
+            for cidx, colid in enumerate(range(col + co, climit, co), start=1):
+                seat = plan[rowid][colid]
+                seats.append(seat)
+                if seat != '.' or cidx == level:
+                    break
+            if ridx == level:
+                break
+    return seats
+
+def check_occupied(plan, row, col, level):
+    numrows = len(plan)
+    numcols = len(plan[0])
+    seats = []
+    seats.extend(check_row(plan, row, col, numrows, numcols, level))
+    seats.extend(check_col(plan, row, col, numrows, numcols, level))
+    seats.extend(check_diagonals(plan, row, col, numrows, numcols, level))
+    return Counter(seats)['#']
 
 
 def part1():
