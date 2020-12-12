@@ -1,10 +1,8 @@
 '''https://adventofcode.com/2020/day/11'''
 
-import pytest
 from pathlib import Path
 from collections import Counter
 import logging
-from pprint import pprint
 
 FNAME = Path(__file__).with_name('input.txt')
 FNAME_TEST = Path(__file__).with_name('test_input.txt')
