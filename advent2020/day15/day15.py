@@ -8,11 +8,9 @@ def part1(my_input):
     number = my_input[-1]
     while n < 2020:
         n += 1
-        prev = nums.setdefault(number, deque((n, n), maxlen=2))
-        n1, n2 = prev
-        new_number = n2 - n1
-        nums.setdefault(new_number, deque((n, n), maxlen=2)).append(n)
-        number = new_number
+        n1, n2 = nums[number]
+        number = n2 - n1
+        nums.setdefault(number, deque((n, n), maxlen=2)).append(n)
     return number
 
 def test_part1():
