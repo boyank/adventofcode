@@ -2,11 +2,11 @@
 
 from collections import deque
 
-def part1(my_input):
+def part1(my_input, limit):
     n = len(my_input)
     nums = {number:deque((idx, idx), maxlen=2) for number, idx in zip(my_input, range(1, n+1))}
     number = my_input[-1]
-    while n < 2020:
+    while n < limit:
         n += 1
         n1, n2 = nums[number]
         number = n2 - n1
@@ -21,6 +21,6 @@ def test_part1():
 
 if __name__ == '__main__':
     my_input = 6,13,1,15,2,0
-    print(f'Part1: {part1(my_input)}')
-
+    print(f'2020th number: {part1(my_input, 2020)}') # 1194
+    print(f'30000000th number: {part1(my_input, 30000000)}') # 48710
 
