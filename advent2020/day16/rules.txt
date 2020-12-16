@@ -1,0 +1,20 @@
+departure location: 37-594 or 615-952
+departure station: 50-562 or 573-968
+departure platform: 49-584 or 592-971
+departure track: 28-727 or 744-957
+departure date: 35-930 or 943-965
+departure time: 38-811 or 829-962
+arrival location: 35-446 or 467-950
+arrival station: 29-234 or 245-969
+arrival platform: 47-416 or 431-970
+arrival track: 38-134 or 160-962
+class: 30-493 or 506-953
+duration: 43-335 or 346-949
+price: 33-635 or 654-953
+route: 43-399 or 410-974
+row: 32-848 or 854-951
+seat: 36-777 or 788-965
+train: 35-109 or 122-969
+type: 38-673 or 694-960
+wagon: 50-168 or 193-971
+zone: 46-215 or 232-954
