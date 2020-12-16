@@ -7,7 +7,6 @@ from itertools import product
 from operator import mul
 from functools import reduce
 
-FNAME = Path(__file__).with_name('input.txt')
 FNAME_RULES = Path(__file__).with_name('rules.txt')
 FNAME_TICKETS = Path(__file__).with_name('tickets.txt')
 
