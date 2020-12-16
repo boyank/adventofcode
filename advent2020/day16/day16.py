@@ -2,7 +2,10 @@
 
 import pytest
 from pathlib import Path
-from collections import namedtuple
+from collections import namedtuple, defaultdict
+from itertools import product
+from operator import mul
+from functools import reduce
 
 FNAME = Path(__file__).with_name('input.txt')
 FNAME_RULES = Path(__file__).with_name('rules.txt')
@@ -37,10 +40,33 @@ def is_valid(field, rules):
     return False
 
 
+def valid_tickets(tickets, rules):
+    return [ticket for ticket in tickets if all(is_valid(field, rules) for field in ticket)]
+
+
 def part1(tickets, rules):
     return sum(field for ticket in tickets 
                 for field in ticket if not is_valid(field, rules))
 
+def part2(ticket, tickets, rules):
+    return reduce(mul, (ticket[field_id] for field_id, field_name
+                                in field_order(tickets, rules).items()
+                                if field_name.startswith('departure')), 1)
+
+
+def field_order(tickets, rules):
+    order = defaultdict(list)
+    tickets = valid_tickets(tickets, rules)
+    for field_id, values in enumerate(zip(*tickets)):
+        for rule in rules:
+            if all(is_valid(value, [rule,]) for value in values):
+                order[field_id].append(rule.name)
+    order = dict(sorted(order.items(), key=lambda x: len(x[1]), reverse=True))
+    fields = {}
+    for (key, value), value2 in zip(list(order.items())[:-1], list(order.values())[1:]):
+        fields[key] = list(set(value) - set(value2))[0]
+    return fields
+                
 
 @pytest.fixture
 def test_rules():
@@ -94,3 +120,4 @@ if __name__ == '__main__':
     tickets = get_tickets(tickets)
     my_ticket, *tickets = tickets
     print(f'Part1: {part1(tickets, rules)}')
+    print(f'Part2: {part2(my_ticket, tickets, rules)}')
