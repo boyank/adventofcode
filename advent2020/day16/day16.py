@@ -74,7 +74,7 @@ row: 6-11 or 33-44
 seat: 13-40 or 45-50""".splitlines()
 
 
-@pytest.mark.usefixture('test_rules')
+@pytest.mark.usefixtures('test_rules')
 def test_get_rules(test_rules):
     rules = get_rules(test_rules)
     assert rules == [Rule('class', 1, 3, 5, 7), Rule('row', 6, 11, 33, 44), Rule('seat', 13, 40, 45, 50)]
@@ -88,7 +88,7 @@ def test_tickets():
 38,6,12""".splitlines()
 
 
-@pytest.mark.usefixture('test_tickets')
+@pytest.mark.usefixtures('test_tickets')
 def test_get_tickets(test_tickets):
     tickets = get_tickets(test_tickets)
     assert tickets == [(7, 3, 47), (40, 4, 50), (55, 2, 20), (38, 6, 12)]

@@ -10,7 +10,8 @@ def part1(data):
     return sum(item1 < item2 for item1, item2 in zip(data[:-1], data[1:]))
 
 def part2(data, shift):
-    return sum(item < data[idx + shift] for idx, item in enumerate(data[:-shift]))
+    return sum(item1 < item2 for item1, item2 in zip(data[:-shift], data[shift:]))
+
 
 @pytest.fixture()
 def input_data():
@@ -23,9 +24,9 @@ def test_part1(input_data):
     assert part1(input_data) == 7
 
 
-# @pytest.mark.usefixtures('input_data')
-# def test_part2(input_data):
-#     assert part2(input_data, 127) == 62
+@pytest.mark.usefixtures('input_data')
+def test_part2(input_data):
+    assert part2(input_data, 3) == 5
 
 
 def test_get_data():
